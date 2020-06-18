@@ -65,7 +65,7 @@ class HistoryServerDiskManagerSuite extends SparkFunSuite with BeforeAndAfter {
     doReturn(2L).when(manager).sizeOf(meq(leaseA.tmpPath))
     val dstA = leaseA.commit("app2", None)
     assert(manager.free() === 1)
-    assert(manager.committed() === 1)
+    assert(manager.committed() === 2)
     val manager1 = mockManager()
     doReturn(1L).when(manager1).sizeOf(meq(dstA))
     doReturn(1L).when(manager1).sizeOf(meq(new File(testDir, "apps")))
