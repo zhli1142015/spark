@@ -83,6 +83,16 @@ private class HistoryServerDiskManager(
       listing.delete(info.getClass(), info.path)
     }
 
+    val changedStoreInfo = listing.view(classOf[ApplicationStoreInfo]).asScala.filter { info =>
+      info.size != sizeOf(new File(info.path))
+    }.map { info =>
+      info.copy(size = sizeOf(new File(info.path)))
+    }.toSeq
+    changedStoreInfo.foreach { info =>
+      logInfo(s"update size for ApplicationStoreInfo ${info.path}")
+      listing.write(info)
+    }
+
     logInfo("Initialized disk manager: " +
       s"current usage = ${Utils.bytesToString(currentUsage.get())}, " +
       s"max usage = ${Utils.bytesToString(maxUsage)}")
