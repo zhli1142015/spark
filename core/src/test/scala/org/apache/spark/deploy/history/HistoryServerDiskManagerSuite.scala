@@ -59,6 +59,16 @@ class HistoryServerDiskManagerSuite extends SparkFunSuite with BeforeAndAfter {
     manager
   }
 
+  test("calculate space after restart") {
+    var manager = mockManager()
+    val leaseA = manager.lease(1)
+    val leaseB = manager.lease(1)
+    val leaseC = manager.lease(1)
+    manager = null
+    manager = mockManager()
+    assert(manager.free() > 0)
+  }
+
   test("leasing space") {
     val manager = mockManager()
 
