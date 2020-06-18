@@ -73,7 +73,7 @@ class HistoryServerDiskManagerSuite extends SparkFunSuite with BeforeAndAfter {
     val leaseB = manager1.lease(3)
     assert(manager1.free() === 0)
     leaseB.rollback()
-    assert(manager1.free() === 2)
+    assert(manager1.free() === 3)
   }
 
   test("leasing space") {

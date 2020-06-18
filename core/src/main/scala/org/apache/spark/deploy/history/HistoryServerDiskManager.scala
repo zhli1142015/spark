@@ -90,7 +90,7 @@ private class HistoryServerDiskManager(
     }.toSeq
     changedStoreInfo.foreach { info =>
       logInfo(s"update size for ApplicationStoreInfo ${info.path}")
-      listing.write(info)
+ //     listing.write(info)
     }
 
     logInfo("Initialized disk manager: " +
