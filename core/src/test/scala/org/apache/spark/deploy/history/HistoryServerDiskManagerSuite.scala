@@ -162,7 +162,9 @@ class HistoryServerDiskManagerSuite extends SparkFunSuite with BeforeAndAfter {
     val manager = mockManager()
     val leaseA = manager.lease(2)
     doReturn(3L).when(manager).sizeOf(meq(leaseA.tmpPath))
-    val dstA = leaseA.commit("app1", None)
+    val app1Id = "app1"
+    doReturn(3L).when(manager).sizeOf(meq(new File(testDir, s"apps/$app1Id.ldb")))
+    val dstA = leaseA.commit(app1Id, None)
     assert(manager.free() === 0)
     assert(manager.committed() === 3)
     // Listing store tracks dstA now.
@@ -182,7 +184,9 @@ class HistoryServerDiskManagerSuite extends SparkFunSuite with BeforeAndAfter {
     val leaseB = manager1.lease(2)
     assert(manager1.free() === 1)
     doReturn(2L).when(manager1).sizeOf(meq(leaseB.tmpPath))
-    val dstB = leaseB.commit("app2", None)
+    val app2Id = "app2"
+    doReturn(2L).when(manager1).sizeOf(meq(new File(testDir, s"apps/$app2Id.ldb")))
+    val dstB = leaseB.commit(app2Id, None)
     assert(manager1.committed() === 2)
     // Listing store tracks dstB only, dstA is evicted by "makeRoom()".
     assert(store.read(classOf[ApplicationStoreInfo], dstB.getAbsolutePath).size === 2)
@@ -197,7 +201,9 @@ class HistoryServerDiskManagerSuite extends SparkFunSuite with BeforeAndAfter {
     assert(manager2.free() === 0)
     val leaseC = manager2.lease(2)
     doReturn(2L).when(manager2).sizeOf(meq(leaseC.tmpPath))
-    val dstC = leaseC.commit("app3", None)
+    val app3Id = "app3"
+    doReturn(2L).when(manager2).sizeOf(meq(new File(testDir, s"apps/$app3Id.ldb")))
+    val dstC = leaseC.commit(app3Id, None)
     assert(manager2.free() === 1)
     assert(manager2.committed() === 2)
     // Listing store tracks dstC only, dstB is evicted by "makeRoom()".
